@@ -1,13 +1,15 @@
 package redis.repo;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class RedisVariableRepository {
-	private RedisTemplate<String, Object> redisTemplate;
+	private RedisTemplate<String, Integer> redisTemplate;
 
-    public RedisVariableRepository(RedisTemplate<String, Object> redisTemplate){
+    public RedisVariableRepository(RedisTemplate<String, Integer> redisTemplate){
+    	redisTemplate.setValueSerializer( new GenericToStringSerializer<Integer>( Integer.class ) );
         this.redisTemplate = redisTemplate;
     }
 
@@ -16,7 +18,7 @@ public class RedisVariableRepository {
     }
 
     public Integer get(String variable){
-        return (Integer) redisTemplate.opsForValue().get(variable);
+        return redisTemplate.opsForValue().get(variable);
     }
 
 }
